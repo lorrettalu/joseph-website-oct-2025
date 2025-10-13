@@ -20,8 +20,8 @@ async function checkPassword() {
     document.getElementById("login").style.opacity = 0;
     setTimeout(() => {
       document.getElementById("login").style.display = "none";
-      document.getElementById("main").style.display = "block";
-      document.getElementById("main").style.opacity = 1;
+      document.getElementById("instructions").style.display = "block";
+      document.getElementById("instructions").style.opacity = 1;
     }, 500);
   } else {
     const inputBox = document.getElementById("password");
@@ -42,15 +42,35 @@ async function checkPassword() {
   console.log("Expected hash:", correctHash);
 }
 
+// --- SECTION SWITCHER ---
+function switchSection(hideId, showId) {
+  const hideEl = document.getElementById(hideId);
+  const showEl = document.getElementById(showId);
+  hideEl.style.opacity = 0;
+  setTimeout(() => {
+    hideEl.style.display = "none";
+    showEl.style.display = "block";
+    setTimeout(() => showEl.style.opacity = 1, 50);
+  }, 400);
+}
+
 // --- EVENT LISTENERS ---
 window.addEventListener("DOMContentLoaded", () => {
-  // When clicking the button
   document.getElementById("enterBtn").addEventListener("click", checkPassword);
 
-  // When pressing Enter inside the password box
-  document.getElementById("password").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-      checkPassword();
-    }
+  document.getElementById("password").addEventListener("keydown", e => {
+    if (e.key === "Enter") checkPassword();
+  });
+
+  document.getElementById("continueBtn").addEventListener("click", () => {
+    switchSection("instructions", "game1");
+  });
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    switchSection("game1", "game2");
+  });
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    switchSection("game2", "login");
   });
 });
