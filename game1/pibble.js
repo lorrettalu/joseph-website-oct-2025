@@ -40,4 +40,62 @@ function draw() {
     image(sponge, 440, 50, 100, 100);
     image(rag, 440, 140, 100, 100);
 
+    // Main Game States
+    if (gameState == "wash") {
+        handleScrubbing("sponge");
+    } else if (gameState == "clean") {
+        handleScrubbing("rag");
+    }
+
+    // Text Feedback
+    if (gameState == "yay") {
+        push();
+        fill(70);
+        textSize(22);
+        text("yaaayyyyyyy", width / 2, height - 25);
+    }
+    if (gameState == "done") {
+        text("All done!", width / 2, height - 25);
+        pop();
+    }
+
+    // Progress Bar
+    if (gameState == "wash" || gameState == "clean") {
+        push();
+        fill(255);
+        rect(width / 2 - 100, 20, 200, 15, 10);
+        fill(120, 200, 120);
+        rect(width / 2 - 100, 20, map(progress, 0, 100, 0, 200), 15, 10);
+    }
+
+}
+
+function handleScrubbing(tool) {
+    let toolPos = (tool == "sponge") ? spongePos : ragPos;
+    let dragging = (tool == "sponge") ? draggingSponge : draggingRag;
+
+    if (dragging && dist(toolPos.x, toolPos.y, width / 2, height / 2 - 20) < 120) {
+        progress += 0.8;
+    }
+
+    if (progress >= 100 && gameState === "wash") {
+        progress = 0;
+        gameState = "yay";
+        yaySound.play();
+        setTimeout(() => {
+            gameState == "clean";
+            cleanSound.play();
+        }, 2000);
+    } else if (progress >= 100 && gameState === "clean") {
+        progress= 0;
+        gameState == "done";
+        yaySound.play();
+    }
+
+}
+
+function mousePressed() {
+    if (gameState === "wash" && dist(mouseX, mouseY, spongePos.x, spongePos.y) < 50) {
+        draggingSponge = true;
+    }
 }
