@@ -84,6 +84,8 @@ function preload() {
     pink_skies = loadSound("music/Zach Bryan - Pink Skies.mp3");
     ticking = loadSound("music/Zach Bryan - Ticking.mp3");
     tourniquet = loadSound("music/Zach Bryan - Tourniquet.mp3");
+
+    loadG2Level(idx);
 }
 
 function setup() {
@@ -96,4 +98,130 @@ function setup() {
     const form = document.getElementById("g2-form");
     const input = document.getElementById("g2-input");
     const nextBtn = document.getElementById("g2-next");
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        submitG2Guess(input.value);
+    });
+
+    nextBtn.addEventListener("click", () => {
+        goToNextG2Level();
+    });
+
+    loadG2Level(idx);
+    updateG2LevelLabel();
+}
+
+function draw() {
+    background(0, 255);
+
+    if (!img) {
+        fill(80);
+        text("loading image...", width/2, height/2);
+        return;
+    }
+
+    drawImageContain(img, width, height);
+
+    if (!reveal) {
+        noStroke();
+
+        let overlay = createGraphics(width, height);
+        overlay.clear();
+        overlay.fill(0, 255);
+        overlay.rect(0, 0, width, height);
+
+        overlay.erase();
+        overlay.circle(constrain(mouseX, 0, width), constrain(mouseY, 0, height), flashRadius * 2);
+        overlay.noErase();
+
+        image(overlay, width/2, height/2, width, height);
+
+    } else {
+        drawImageContain(img, width, height);
+    }
+
+}
+
+function loadG2Level(idx) {
+    reveal = false;
+    const imgPath = images[idx];
+    img = null;
+
+    loadImage(imgPath, (gimg) => {
+        img = gimg;
+    });
+
+    const feedback = document.getElementById("g2-feedback");
+    const success = document.getElementById("g2-success");
+    const nextBtn = document.getElementById("g2-next");
+    const input = document.getElementById("g2-input");
+
+    feedback.style.visiblity = "hidden";
+    success.style.display = "none";
+    nextBtn.style.display = "none";
+    input.value = "";
+    input.focus();
+}
+
+function updateG2LevelLabel() {
+    const label = document.getElementById("g2-level");
+    label.textContent = `Level ${idx + 1} of ${g2_total}`;
+}
+
+function normalizeAnswer(s) {
+    return s
+        .toLowerCase()
+        .trim()
+        .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+function submitG2Guess(raw) {
+    const feedback = document.getElementById("g2-feedback");
+    const success = document.getElementById("g2-success");
+    const nextBtn = document.getElementById("g2-next");
+
+    const guess = normalizeAnswer(raw);
+    if (!guess) {
+        feedback.textContent = "Please enter a guess.";
+        feedback.style.visibility = "visible";
+        return;
+    }
+
+    const answerss = (answers[idx] || []).map(normalizeAnswer);
+
+    const correct = answerss.some(a => a === guess);
+
+    if (correct) {
+        reveal = true;
+        feedback.style.visibility = "hidden";
+        success.style.display = "block";
+        nextBtn.style.display = "inline-block";
+    } else {
+        feedback.textContent = "Incorrect, try again.";
+        feedback.style.visibility = "visible";
+    }
+} 
+
+function goToNextG2Level() {
+    if (idx < g2_total - 1) {
+        idx += 1;
+        updateG2LevelLabel();
+        loadG2Level(idx);
+    } else {
+        const success = document.getElementById("g2-success");
+        const nextBtn = document.getElementById("g2-next");
+        success.textContent = "All levels complete!";
+        nextBtn.style.visibility = "none";
+    }
+}
+
+function drawImageContain(gimg, boxW, boxH) {
+    const iw = gimg.width;
+    const ih = gimg.height;
+    const scale = Math.min(boxW / iw, boxH / ih);
+    const w = iw * scale;
+    const h = ih * scale;
+    image(gimg, boxW/2, boxH/2, w, h);
 }
