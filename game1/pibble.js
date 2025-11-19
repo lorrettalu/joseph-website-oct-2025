@@ -15,6 +15,8 @@ let spongePos;
 let ragPos;
 let draggingSponge = false;
 let draggingRag = false;
+let canvasW = 500;
+let canvasH = 500;
 
 function preload() {
     pibble = loadImage("pibble pictures/pibble.png");
@@ -26,7 +28,7 @@ function preload() {
 }
 
 function setup() {
-    let canvas = createCanvas(500, 500);
+    let canvas = createCanvas(canvasW, canvasH);
     canvas.parent("game1-container");
     imageMode(CENTER);
     textAlign(CENTER, CENTER);
@@ -100,7 +102,7 @@ function handleScrubbing(tool) {
         yaySound.play();
         cleanSound.stop();
 
-        document.getElementById("nextBtn").style.display = "inline-block";
+        document.getElementById("nextGameBtn").style.display = "inline-block";
     }
 
 }

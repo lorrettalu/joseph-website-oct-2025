@@ -66,7 +66,7 @@ window.addEventListener("DOMContentLoaded", () => {
     switchSection("instructions", "game1");
   });
 
-  document.getElementById("nextBtn").addEventListener("click", () => {
+  document.getElementById("nextGameBtn").addEventListener("click", () => {
     switchSection("game1", "game2");
   });
 
