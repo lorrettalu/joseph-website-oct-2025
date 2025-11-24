@@ -115,7 +115,7 @@ let pictureSketch = function(p) {
 
         nextBtn.addEventListener("click", () => {
             if (idx === g2_total - 1) {
-                switchSection("game2", "login");
+                switchSection("game2", "mini3");
                 return;
             }
             goToNextG2Level();

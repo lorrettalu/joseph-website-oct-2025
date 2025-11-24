@@ -71,6 +71,35 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("restartBtn").addEventListener("click", () => {
-    switchSection("game2", "login");
+    switchSection("game2", "game3");
   });
+});
+
+// --- MINI GAME 3 ---
+window.addEventListener("DOMContentLoaded", () => {
+  const choices = document.querySelectorAll(".mini3-choice");
+  const feedback = document.getElementById("mini3-feedback");
+  const success = document.getElementById("mini3-success");
+  const continueBtn = document.getElementById("mini3-continue");
+
+  choices.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const isCorrect = btn.dataset.answer === "correct";
+
+      if (isCorrect) {
+        feedback.style.visibility = "hidden";
+        success.style.visibility = "block";
+        continueBtn.style.display = "inline-block";
+
+        choices.forEach(c => c.disabled = true);
+      } else {
+        feedback.style.visibility = "visible";
+      }
+    });
+  });
+
+  continueBtn.addEventListener("click", () => {
+    switchSection("mini3", "login");
+  });
+  
 });
