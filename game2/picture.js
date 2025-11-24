@@ -82,7 +82,7 @@ let pictureSketch = function(p) {
     let img;
     let idx = 0;
     let reveal = false;
-    let canvasW = 640;
+    let canvasW = 590;
     let canvasH = 400;
     let flashRadius = 90;
 
